@@ -1,0 +1,99 @@
+Task 1:Predict the percentage of an student based on the no. of study hours.
+What will be predicted score if a student studies for 9.25 hrs/ day?
+# importing all the libraries, we need in this problem statement.
+import pandas as pd
+# numpy is used for calculation. 
+import numpy as np
+#matplotlib is for plotting.
+import matplotlib.pyplot as plt
+%matplotlib inline 
+​
+# Reading data from remote link
+# The Link which is given below is a dataset.
+url = "https://raw.githubusercontent.com/AdiPersonalWorks/Random/master/student_scores%20-%20student_scores.csv"
+# Now Reading the file.
+s_data = pd.read_csv(url)
+print("Data imported successfully")
+# head(10) it will display first 10 rows.
+s_data.head(10)
+Data imported successfully
+Hours	Scores
+0	2.5	21
+1	5.1	47
+2	3.2	27
+3	8.5	75
+4	3.5	30
+5	1.5	20
+6	9.2	88
+7	5.5	60
+8	8.3	81
+9	2.7	25
+# Now Plotting the distribution of scores.
+s_data.plot(x='Hours', y='Scores', style='o')  
+# style means we are choosing o as a representation we can choose'*' also.
+plt.title('Hours vs Percentage')  
+# we are choosing x-axis as Hours Studuied.
+plt.xlabel('Hours Studied')  
+# we are choosing y-axis as Percentage score.
+plt.ylabel('Percentage Score')  
+plt.show()
+
+PREPARING THE DATA
+X = s_data.iloc[:, :-1].values # Over here is all the data and except the last value scores=21.
+y = s_data.iloc[:, 1].values   #
+# In this we are splitting the datasets into training and test data.
+from sklearn.model_selection import train_test_split  
+X_train, X_test, y_train, y_test = train_test_split(X, y, 
+                            test_size=0.2, random_state=0)
+NOW TRAINING THE ALGORITHM
+# Now we are going to train the data
+# we are applying linear regressor
+from sklearn.linear_model import LinearRegression  
+regressor = LinearRegression()  
+regressor.fit(X_train, y_train) 
+​
+print("Training complete.")
+Training complete.
+# Plotting the regression line
+# Y=m.X+C
+line = regressor.coef_*X+regressor.intercept_
+​
+# Plotting for the test data
+plt.scatter(X,y)
+plt.plot(X, line);
+plt.show()
+
+print(X_test) #Testing the data into hours
+y_pred = regressor.predict(X_test) # Predicting the scores values will be stored in variable y_pred
+[[1.5]
+ [3.2]
+ [7.4]
+ [2.5]
+ [5.9]]
+# Comparing Actual vs Predicted
+# y_test is testing value and y_pred is the predicting value
+df = pd.DataFrame({'Actual': y_test, 'Predicted': y_pred})  
+df
+Actual	Predicted
+0	20	16.884145
+1	27	33.732261
+2	69	75.357018
+3	30	26.794801
+4	62	60.491033
+# Now as per the question we have to check for hours=9.25
+hours = 9.25
+own_pred = regressor.predict([[hours]])
+# Printing the No of hours 
+print("No of Hours = {}".format(hours))
+# Printing the predicting score
+print("Predicted Score = {}".format(own_pred[0]))
+No of Hours = 9.25
+Predicted Score = 93.69173248737538
+# importing metrics
+from sklearn import metrics
+# printing Mean Absolute Error
+print('Mean Absolute Error:', 
+      metrics.mean_absolute_error(y_test, y_pred))
+Mean Absolute Error: 4.183859899002975
+Answer :Mean Absolute Error is 4.183859899002975
+## Thank You
